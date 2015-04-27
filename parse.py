@@ -2,10 +2,13 @@ import json
 import os.path
 import operator
 from collections import defaultdict
+import mdp
+import numpy as np
+import pandas as p
 
 cutoff = 9
 
-def parse(selection=['Pittsburgh']):
+def parse_json(selection=['Pittsburgh']):
   businesses = list()
   for line in open('data/yelp_academic_dataset_business.json'):
     businesses.append(json.loads(line))
@@ -43,28 +46,31 @@ def parse(selection=['Pittsburgh']):
   with open('data/users.json', 'w') as outfile:
     json.dump(users, outfile)
 
+# def main():
+
 if not os.path.isfile('data/users.json'):
-  parse()
+  parse_json(['Pittsburgh'])
 
-def main():
+for line in open('data/businesses.json'):
+  # only one line
+  businesses = json.loads(line)
+  # business[business_id] = review_count
+print("Businesses: " + str(len(businesses)))
 
-  for line in open('data/businesses.json'):
-    # only one line
-    businesses = json.loads(line)
-    # business[business_id] = review_count
-  print("Businesses: " + str(len(businesses)))
+for line in open('data/users.json'):
+  # only one line
+  users = json.loads(line)
+  # users[user_id][business_id] = rating
 
-  for line in open('data/users.json'):
-    # only one line
-    users = json.loads(line)
-    # users[user_id][business_id] = rating
+print("Users: " + str(len(users)))
 
-  print("Users: " + str(len(users)))
+df = p.DataFrame(users).T.fillna(0)
+# to convert to numpy go df.values
 
 
 
 
-main()
+# main()
 
 
 
