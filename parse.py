@@ -1,4 +1,5 @@
 import json
+import os.path
 import operator
 from collections import defaultdict
 
@@ -42,3 +43,5 @@ def parse(selection=['Pittsburgh']):
   with open('data/users.json', 'w') as outfile:
     json.dump(users, outfile)
 
+if True:
+  print("Hello")
