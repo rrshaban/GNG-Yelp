@@ -43,5 +43,22 @@ def parse(selection=['Pittsburgh']):
   with open('data/users.json', 'w') as outfile:
     json.dump(users, outfile)
 
-if True:
-  print("Hello")
+if not os.path.isfile('data/users.json'):
+  parse()
+
+def main():
+
+  for line in open('data/businesses.json'):
+    # only one line
+    businesses = json.loads(line)
+    # business[business_id] = review_count
+
+  for line in open('data/users.json'):
+    # only one line
+    users = json.loads(line)
+    # users[user_id][business_id] = rating
+
+  print("Businesses: " + str(len(businesses)))
+  print("Users: " + str(len(users)))
+
+
