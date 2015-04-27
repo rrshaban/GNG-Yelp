@@ -1,16 +1,35 @@
 import json
 import operator
+from collections import defaultdict
 
-b = list()
+cutoff = 9
+
+
+businesses = list()
 for line in open('data/yelp_academic_dataset_business.json'):
-  b.append(json.loads(line))
+  businesses.append(json.loads(line))
 
-c = dict()
-for bus in b:
-  if bus['city'] in c:
-    c[bus['city']] += 1
-  else:
-    c[bus['city']] = 1
-sorted_c = sorted(c.items(), key=operator.itemgetter(1), reverse=True)
+selection = ['Pittsburgh']
+sel_businesses = dict()
+for bus in businesses:
+  if (bus['city'] in selection) and (bus['review_count'] > cutoff):
+    sel_businesses[bus['business_id']] = bus['review_count']
 
-print(sorted_c[:20])
+print("Businesses: " + str(len(sel_businesses.keys())))
+
+user_reviews = defaultdict(dict)
+for line in open('data/yelp_academic_dataset_review.json'):
+  l = json.loads(line)
+  
+  if l['business_id'] in sel_businesses:
+    user_reviews[l['user_id']][l['business_id']] = l['stars']
+
+print("Users: " + str(len(user_reviews.keys())))
+
+users = defaultdict(dict)
+for user in user_reviews.keys():
+  if len(user_reviews[user].keys()) > cutoff:
+    users[user] = user_reviews[user]
+
+
+print(users[users.keys().first])
