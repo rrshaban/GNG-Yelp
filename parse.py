@@ -52,13 +52,13 @@ def main():
     # only one line
     businesses = json.loads(line)
     # business[business_id] = review_count
+  print("Businesses: " + str(len(businesses)))
 
   for line in open('data/users.json'):
     # only one line
     users = json.loads(line)
     # users[user_id][business_id] = rating
 
-  print("Businesses: " + str(len(businesses)))
   print("Users: " + str(len(users)))
 
 
