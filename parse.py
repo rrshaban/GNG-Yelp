@@ -2,9 +2,12 @@ import json
 import os.path
 import operator
 from collections import defaultdict
-import mdp
+# import mdp
 import numpy as np
 import pandas as p
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+
 
 cutoff = 9
 
@@ -37,14 +40,16 @@ def parse_json(selection=['Pittsburgh']):
     json.dump(user_reviews, outfile)
 
   users = defaultdict(dict)
-  for user in user_reviews.keys():
+  for ind, user in enumerate(user_reviews.keys()):
     if len(user_reviews[user].keys()) > cutoff:
-      users[user] = user_reviews[user]
+      users['user_'+str(ind)] = user_reviews[user]
 
   print("Users after cutoff: " + str(len(users.keys())))
 
   with open('data/users.json', 'w') as outfile:
     json.dump(users, outfile)
+
+  ######################## END PARSE ########
 
 # def main():
 
@@ -67,6 +72,18 @@ print("Users: " + str(len(users)))
 df = p.DataFrame(users).T.fillna(0)
 # to convert to numpy go df.values
 
+plt.figure()
+plt.scatter(df.values)
+input("waiting: ")
+
+# gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
+# STEP = 500
+
+# for i in range(0,x.shape[0],STEP):
+#   gng.train(x[i:i+STEP])
+#   # [...] plotting instructions
+
+# gng.stop_training()
 
 
 
