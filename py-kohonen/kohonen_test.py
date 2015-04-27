@@ -37,7 +37,7 @@ Press 1, 2, etc. to toggle display of the first, second, etc. controller's
 neurons and error bars.
 '''
 
-import cairo
+import cairocffi as cairo
 import gobject
 import gtk
 import logging
