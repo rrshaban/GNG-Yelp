@@ -2,7 +2,7 @@ import json
 import os.path
 import operator
 from collections import defaultdict
-# import mdp
+import mdp
 import numpy as np
 import pandas as p
 import matplotlib.pyplot as plt
@@ -73,10 +73,10 @@ df = p.DataFrame(users).T.fillna(0)
 # to convert to numpy go df.values
 
 plt.figure()
-plt.scatter(df.values)
+plt.plot(df.values)
 input("waiting: ")
 
-# gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
+gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
 # STEP = 500
 
 # for i in range(0,x.shape[0],STEP):
