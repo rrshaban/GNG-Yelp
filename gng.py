@@ -45,13 +45,15 @@ class Unit:
     measure, and a list of edges.
     """
     
-    def __init__(self, vector = None, dimension=2, minVal=-1, maxVal=1):
+    def __init__(self, vector = None, dimension=1338, minVal=0, maxVal=5):
         self.dimension = dimension
         self.minVal = minVal
         self.maxVal = maxVal
         if vector:
+            # print "vector defined"
             self.vector = vector
         else:
+            # print "vector undefined"
             self.vector = self.randomVector()
         self.error = 0
         self.edges = []
@@ -104,6 +106,7 @@ class Unit:
         given learning rate.
         """
         for i in range(len(towardPoint)):
+            # print i, len(self.vector)
             self.vector[i] += lrate*(towardPoint[i]-self.vector[i])
 
 class Edge:
@@ -151,7 +154,11 @@ class GrowingNeuralGas:
 
         self.verbose = verbose
         self.stepCount = 1
-        self.units = [Unit(dimension=length), Unit(dimension=length)]
+        self.units = [Unit(dimension=length), 
+                    Unit(dimension=length), 
+                    Unit(dimension=length), 
+                    Unit(dimension=length), 
+                    Unit(dimension=length)]
         self.generateNext = generateNext
 
     def __str__(self):
@@ -326,10 +333,11 @@ class GrowingNeuralGas:
         distribution for a time.  Eventually revert back to the
         original distribution.
         """
-        if self.stepCount < 5000 or self.stepCount > 10000:
-            nextPoint = self.generateNext(1)
-        else:
-            nextPoint = self.generateNext(0.5)
+        # if self.stepCount < 5000 or self.stepCount > 10000:
+        nextPoint = self.generateNext()
+        # else:
+        #     nextPoint = self.generateNext(0.5)
+
         best, second = self.computeDistances(nextPoint)
         self.incrementEdgeAges(best)
         best.error += self.distance(best.vector, nextPoint)**2

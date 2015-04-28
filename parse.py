@@ -5,8 +5,10 @@ from collections import defaultdict
 # import mdp
 import numpy as np
 import pandas as p
-import matplotlib.pyplot as plt
-plt.style.use('ggplot')
+# import matplotlib.pyplot as plt
+# plt.style.use('ggplot')
+import gng
+from random import randrange
 
 
 cutoff = 9
@@ -70,20 +72,29 @@ for line in open('data/users.json'):
 print("Users: " + str(len(users)))
 
 df = p.DataFrame(users).T.fillna(0)
-# to convert to numpy go df.values
 
-plt.figure()
-plt.plot(df.values)
-input("waiting: ")
+def getUser():
+  return df.values[randrange(len(df))]
 
-# gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
-# STEP = 500
+# plt.figure()
+# plt.plot(df.values)
+s = input("waiting: ")
 
-# for i in range(0,x.shape[0],STEP):
-#   gng.train(x[i:i+STEP])
-#   # [...] plotting instructions
+gng = gng.GrowingNeuralGas(getUser, 1338, verbose=0)
+for i in range(15000):
+  gng.step()
+  if gng.stepCount % 1000==0:
+    print gng
 
-# gng.stop_training()
+
+  # gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
+  # STEP = 500
+
+  # for i in range(0,x.shape[0],STEP):
+  #   gng.train(x[i:i+STEP])
+  #   # [...] plotting instructions
+
+  # gng.stop_training()
 
 
 
