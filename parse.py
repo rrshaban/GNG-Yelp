@@ -7,7 +7,7 @@ import numpy as np
 import pandas as p
 # import matplotlib.pyplot as plt
 # plt.style.use('ggplot')
-import gng
+import gng as g
 from random import randrange
 
 
@@ -18,7 +18,6 @@ def parse_json(selection=['Pittsburgh']):
   for line in open('data/yelp_academic_dataset_business.json'):
     businesses.append(json.loads(line))
 
-  selection = ['Pittsburgh']
   sel_businesses = dict()
   for bus in businesses:
     if (bus['city'] in selection) and (bus['review_count'] > cutoff):
@@ -53,52 +52,61 @@ def parse_json(selection=['Pittsburgh']):
 
   ######################## END PARSE ########
 
-# def main():
+def get_user_id(users_dict):
 
-if not os.path.isfile('data/users.json'):
-  parse_json(['Pittsburgh'])
+  while True:
+    s = raw_input("Input user ID or 'q' to exit: ")
 
-for line in open('data/businesses.json'):
-  # only one line
-  businesses = json.loads(line)
-  # business[business_id] = review_count
-print("Businesses: " + str(len(businesses)))
+    if s == 'q':
+      quit()
 
-for line in open('data/users.json'):
-  # only one line
-  users = json.loads(line)
-  # users[user_id][business_id] = rating
-
-print("Users: " + str(len(users)))
-
-df = p.DataFrame(users).T.fillna(0)
-
-def getUser():
-  return df.values[randrange(len(df))]
-
-# plt.figure()
-# plt.plot(df.values)
-s = input("waiting: ")
-
-gng = gng.GrowingNeuralGas(getUser, 1338, verbose=0)
-for i in range(15000):
-  gng.step()
-  if gng.stepCount % 1000==0:
-    print gng
+    if s in users_dict:
+      return s
+    else:
+      print "User ID was not found, please try again."
 
 
-  # gng = mdp.nodes.GrowingNeuralGasNode(max_nodes=75)
-  # STEP = 500
+def main():
 
-  # for i in range(0,x.shape[0],STEP):
-  #   gng.train(x[i:i+STEP])
-  #   # [...] plotting instructions
+  sel = ['Pittsburgh']
 
-  # gng.stop_training()
+  print("Loading user and restaurant data...")
+
+  if not os.path.isfile('data/users.json'):
+    parse_json(sel)
+
+  for line in open('data/businesses.json'):
+    # only one line
+    businesses = json.loads(line)
+    # business[business_id] = review_count
+  print("Restaurants: " + str(len(businesses)))
+
+  for line in open('data/users.json'):
+    # only one line
+    users = json.loads(line)
+    # users[user_id][business_id] = rating
+
+  print("Users: " + str(len(users)))
+
+  df = p.DataFrame(users).T.fillna(0) # fill in missing values with 0
+
+  def get_random_user():
+    return df.values[randrange(len(df))]
+
+  print("Building GNG network...")
+
+  # gng = g.GrowingNeuralGas(get_random_user, 1338, verbose=0)
+  # for i in range(15000):
+  #   gng.step()
+  #   if gng.stepCount % 50==0:
+  #     print gng
+
+  print("Recommendation system ready!")
+  user_id = get_user_id(users)
 
 
-
-# main()
+if __name__ == '__main__':
+    main()
 
 
 
