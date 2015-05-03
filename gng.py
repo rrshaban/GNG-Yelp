@@ -45,10 +45,11 @@ class Unit:
     measure, and a list of edges.
     """
     
-    def __init__(self, vector = None, dimension=1338, minVal=0, maxVal=5):
+    def __init__(self, user_id = "", vector = None, dimension=1338, minVal=0, maxVal=5):
         self.dimension = dimension
         self.minVal = minVal
         self.maxVal = maxVal
+        self.userId = user_id
         if vector:
             # print "vector defined"
             self.vector = vector
@@ -62,9 +63,13 @@ class Unit:
         result = "Unit:\n"
         result += "Vector: " + self.vectorStr()
         result += " Error: " + str(self.error) + "\n" 
+        result += " User_id: " + self.userId
         for e in self.edges:
             result += e.__str__()
         return result
+
+    def getUser(self):
+        return self.userId
 
     def vectorStr(self):
         result = "[ "
@@ -149,7 +154,7 @@ class GrowingNeuralGas:
         self.neighborLearnRate = 0.006
         self.maxAge = 50
         self.reduceError = 0.995
-        self.stepsToInsert = 2
+        self.stepsToInsert = 3
         self.insertError = 0.5
 
         self.verbose = verbose
@@ -293,7 +298,7 @@ class GrowingNeuralGas:
             total += unit.error
         return total/len(self.units)
 
-    def insertUnit(self):
+    def insertUnit(self, user_id=""):
         """
         Inserts a new unit into the GNG.  Finds the unit with the highest
         error and then finds its topological neighbor with the highest
@@ -306,7 +311,7 @@ class GrowingNeuralGas:
         newVector = []
         for i in range(len(worst.vector)):
             newVector.append(0.5 * (worst.vector[i] + worstNeighbor.vector[i]))
-        newUnit = Unit(newVector)
+        newUnit = Unit(vector=newVector,user_id=user_id)
         if self.verbose > 0:
             print "Insert unit:", newUnit.vectorStr()
         self.units.append(newUnit)
@@ -334,7 +339,7 @@ class GrowingNeuralGas:
         original distribution.
         """
         # if self.stepCount < 5000 or self.stepCount > 10000:
-        nextPoint = self.generateNext()
+        nextPoint, nextName = self.generateNext()
         # else:
         #     nextPoint = self.generateNext(0.5)
 
@@ -352,7 +357,7 @@ class GrowingNeuralGas:
             self.connectUnits(best, second)
         self.removeStaleEdges()
         if self.stepCount % self.stepsToInsert == 0:
-            self.insertUnit()
+            self.insertUnit(nextName)
         self.reduceAllErrors()
         ### To view progress of learning
         if self.stepCount % 1000 == 0:

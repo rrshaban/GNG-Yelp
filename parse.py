@@ -43,7 +43,7 @@ def parse_json(selection=['Pittsburgh']):
   users = defaultdict(dict)
   for ind, user in enumerate(user_reviews.keys()):
     if len(user_reviews[user].keys()) > cutoff:
-      users['user_'+str(ind)] = user_reviews[user]
+      users[user] = user_reviews[user]
 
   print("Users after cutoff: " + str(len(users.keys())))
 
@@ -73,12 +73,15 @@ def main():
   print("Loading user and restaurant data...")
 
   if not os.path.isfile('data/users.json'):
+    print("User data not pre-parsed -- will now parse\n")
     parse_json(sel)
+    print("User data parsing finised!\n")
 
   for line in open('data/businesses.json'):
     # only one line
     businesses = json.loads(line)
     # business[business_id] = review_count
+
   print("Restaurants: " + str(len(businesses)))
 
   for line in open('data/users.json'):
@@ -88,25 +91,40 @@ def main():
 
   print("Users: " + str(len(users)))
 
-  df = p.DataFrame(users).T.fillna(0) # fill in missing values with 0
+  df = p.DataFrame(data=users).T.fillna(0) # fill in missing values with 0
 
   def get_random_user():
-    return df.values[randrange(len(df))]
+    u = df.iloc[randrange(len(df))]
+    return (u.values, u.name)
 
   print("Building GNG network...")
 
-  # gng = g.GrowingNeuralGas(get_random_user, 1338, verbose=0)
-  # for i in range(15000):
-  #   gng.step()
-  #   if gng.stepCount % 50==0:
-  #     print gng
+  gng = g.GrowingNeuralGas(get_random_user, 1338, verbose=0)
+  for i in range(100): # 6000
+    gng.step()
+    if gng.stepCount % 100==0:
+      print gng
+
 
   print("Recommendation system ready!")
+
   user_id = get_user_id(users)
+  user_node = df.loc[user_id].values
+
+  rec_users = [x.getUser() for x in gng.computeDistances(user_node)]
+
+  for user in rec_users:
+    print "We recommend you follow the following users: ", user
+
+
+  # print type(node)
+  # print type(df.values[randrange(len(df))])
+
+  # user_9893
 
 
 if __name__ == '__main__':
-    main()
+  main()
 
 
 
