@@ -121,13 +121,8 @@ def main():
   sorted_res = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
 
   print "\nWe recommend you look at the following restaurants: "
-  for res_id, rating in sorted_res[:5]:
+  for res_id, rating in sorted_res[:10]:
     print res_id, " with a rating of ", rating
-
-
-
-
-
 
   # print type(node)
   # print type(df.values[randrange(len(df))])
