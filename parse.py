@@ -113,14 +113,26 @@ def main():
 
   rec_users = [x.getUser() for x in gng.computeDistances(user_node)]
 
+  res = dict()
   for user in rec_users:
+    res.update(users[user])
     print "We recommend you follow the following users: ", user
+
+  sorted_res = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
+
+  print "\nWe recommend you look at the following restaurants: "
+  for res_id, rating in sorted_res[:5]:
+    print res_id, " with a rating of ", rating
+
+
+
+
 
 
   # print type(node)
   # print type(df.values[randrange(len(df))])
 
-  # user_9893
+  # -0itF0VWVBe3k2AdfUReGA
 
 
 if __name__ == '__main__':

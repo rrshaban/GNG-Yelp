@@ -154,7 +154,7 @@ class GrowingNeuralGas:
         self.neighborLearnRate = 0.006
         self.maxAge = 50
         self.reduceError = 0.995
-        self.stepsToInsert = 3
+        self.stepsToInsert = 10
         self.insertError = 0.5
 
         self.verbose = verbose
