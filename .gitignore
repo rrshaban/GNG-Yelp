@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 *.o 
 *.swp
 *.pyc
 #*#
 *~
+=======
+.gitignore
+*.pyc
+data/Dataset_Challenge_Academic_Dataset_Agreement.pdf
+data/Yelp_Dataset_Challenge_Terms_round_5.pdf
+data/yelp_academic_dataset_business.json
+data/yelp_academic_dataset_checkin.json
+data/yelp_academic_dataset_review.json
+data/yelp_academic_dataset_tip.json
+data/yelp_academic_dataset_user.json
+>>>>>>> 831306a1e98c7cce54b50b60d05501c72dd02bee

@@ -1,0 +1,99 @@
+=== Checklist for MDP release ===
+
+Before release:
+
+- check that new nodes have been explicitly imported in nodes/__init__.py
+  and that they are listed in __all__:
+  - create a list of defined nodes with:
+    git grep 'class .*Node(' mdp/nodes | grep -v test | grep -v Scikits | cut -d ':' -f 2 | cut -d ' ' -f 2 | cut -d '(' -f 1 | sort > /tmp/list_defined
+  - create a list of nodes imported in mdp.nodes with:
+    python -c "import sys, mdp; [sys.stdout.write(i+'\n') for i in  sorted([obj for obj in mdp.nodes.__dict__ if obj.endswith('Node') and not obj.endswith('ScikitsLearnNode')])]" > /tmp/list_in_dict
+  - create a list of nodes in __all__ with:
+    python -c "import sys, mdp; [sys.stdout.write(i+'\n') for i in  sorted([obj for obj in mdp.nodes.__all__ if obj.endswith('Node') and not obj.endswith('ScikitsLearnNode')])]" > /tmp/list_in_all
+  - compare those lists [keep in mind that a couple of nodes are private and
+    so those lists do not need to be exactly equal]
+
+- make sure that __init__ has the right version number
+
+- update date in variable __copyright__ in file __init__
+- test all suported python versions and dependencies with
+  python testall.py /home/tiziano/python/x86_64/lib/pythonVERSION/site-packages
+- "make doctest" in docs repository and fix all failures
+
+During release:
+- update CHANGES: you can generate a new bunch of CHANGES with:
+  git log --no-color --pretty="format:%w(79,0,12)%ad: %s%+b" --date=short --no-merges --since=$LASTRELEASE
+  where LASTRELEASE is the date of the last release [LASTRELEASE=2010-05-15]. 
+  You can then prepend the output of this command to the original CHANGES file, 
+  but even better would be to edit the result to only keep the changes
+  that are relevant for the user like incompatibilities, new features, etc..
+- update TODO and COPYRIGHT (date)
+- generate tutorial, website, and API documentation [make website]
+- change homepage colors
+- short/long description should go: on SF.net description, tutorial,
+  home page, modules __init__, software.incf.net.
+- generate installers and source packages and test them:
+  for python2: run the gendist script
+  for python3: the windows installer must be generated under windows,
+               following the instructions in gendist
+- create a release notes file
+- tag release in git (tag mdp-toolkit repo)
+  git tag -a MDP-3.0
+- push the tag git push --tags
+- update on SF.net:
+  release files: 
+    - sftp username,mdp-toolkit@frs.sourceforge.net
+    - cd /home/pfs/project/m/md/mdp-toolkit/mdp-toolkit/
+    - create a new directory for the release, for example for release 3.0:
+       mkdir 3.0
+       cd 3.0
+    - upload the files there (note: the release notes should be named 
+      README.txt): 
+      file to upload are: .tar.gz, .zip, .exe, tutorial, release notes file
+       - login to sourceforge, go to "Files"
+       - select the new created directory
+       - select the installer for windows and set it as 
+         default for windows by clicking on the "i" icon on the right, 
+       - select the tar.gz for linux and set it as 
+         default for linux and mac
+       - at that point the readme file should be automatically shown as release
+         note file
+		 if README.txt is not shown, delete it and upload it through the web interface.
+		 make sure that it is shown.
+    - more info: https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
+- make the website within a clone of the docs repository with:
+ - make website
+ - be careful to read all warnings and messages, often things do not work as 
+   expected.
+ - upload the pdf tutorial, which is in build/latex/MDP-tutorial.pdf, to sf.net
+   as explained above for the source tarballs.
+ - synchronize the site with:
+   cd build/html
+   rsync -av --delete-after . username,mdp-toolkit@web.sourceforge.net:/home/project-web/mdp-toolkit/htdocs/
+ - more info: http://alexandria.wiki.sourceforge.net/Project+Web,+Shell,+VHOST+and+Database+Services
+- tag the docs repository:
+  git tag -a MDP-3.0
+  git push --tags
+- post news to sourceforge [the content may be the release notes file]:
+  https://sourceforge.net/news/submit.php?group_id=116959
+- update package information on mloss.org, pypi, and software.incf.net:
+  
+  - pypi [you need an account here: http://pypi.python.org/pypi]:
+     within a clone of the mdp-toolkit repo: python setup.py register
+  
+  - mloss.org: https://mloss.org/software/update/60/
+ 
+  - software.incf.org: http://software.incf.net/software/modular-toolkit-for-data-processing-mdp/
+
+After release:
+- update version number in __init__
+- send announcement to:
+	connectionists: connectionists@cs.cmu.edu
+	ML-news: ML-news@googlegroups.com
+	numpy-discussion: numpy-discussion@scipy.org
+	Scipy users: scipy-user@scipy.org
+	mdp-users: mdp-toolkit-users@lists.sourceforge.net
+        Python-announce: python-announce-list@python.org
+
+- celebrate!!
+

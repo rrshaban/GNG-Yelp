@@ -1,0 +1,69 @@
+for MDP 3.3
+===========
+
+- clearify documentation on Flow.train as suggested by Fabian Schoenfeld in
+  http://sourceforge.net/mailarchive/message.php?msg_id=27926167
+- checkout windows 64bit binaries from http://www.lfd.uci.edu/~gohlke/pythonlibs/ maybe point to it from the documentation?
+- add code for generating the plots in the tutorial (but we don't want the
+  doctests to fail if matplotlib is not installed: find a good way of
+  dealing with it, pymvpa already does it properly)
+- document extension disable environment variables
+- docstrings should be migrated to rst everywhere (only class.__doc__ has
+  been done for now)
+- example pages are still not good enough:
+  idea: I actually think that every example page should be
+  self-consistent, so no imports (apart from system-installed modules
+  of course) should be allowed. if an example requires a lot of
+  boiler-plate code, this code could be attached at the end of the
+  example page. note that you can use the literalinclude [1]
+  directive to include the code, so you don't even need to re-type
+  everything in rst. this solution has the big advantage of allowing
+  doctest to run properly and to avoid magic tricks with sys.path,
+  which are not exactly elegant and prone to fail 
+  [1] http://sphinx.pocoo.org/markup/code.html?highlight=include#literalinclude
+- remove _monkeypatch_pp when parallel python is fixed
+- let EtaConmputerNode match the new convention of SFA Node in terms of
+  last sample.
+- add example of usage of MDP within PyMVPA. The code exists already:
+  https://github.com/PyMVPA/PyMVPA/blob/master/doc/examples/mdp_mnist.py
+- find a solution to the __revision__ problem: should it be set on installation?
+   numpy solved the problem, do we want to go this route?
+- parallel: provide adapters for more sophisticated schedulers
+- add _bias attribute to PCANode to make it more consistent with SFA node.
+  Maybe one could even create a new AffineNode node as a base class for PCA,
+  SFA and other affine transformations?
+  This might also be a good opportunity for some more PEP8 cleanup.
+- add more classifier stuff, like a ClassifierFlow
+- add an example of training a node with multiple training phases using a flow,
+  where the training is done first using lists and then using a custom iterators.
+  special care should be taken on explaining how to pass additional arguments to
+  the train method. an example of how this can look confusing and go wrong can be 
+  found in the testFlowWrongItarableException test in test_flows.py
+- fix damned LLENode test for 2D shape embedded in 3D!
+- check that SparsePCA works on machine with scipy 0.9.0, add it to MDP if so
+- create a Flow metaclass to enable Flow extensions (think of ParallelFlow!)
+- implement an extension context manager with additional parameters and 
+  exception handling. E.g.:
+  flow = Flow([PCANode()])
+  with extension('parallel', args=(ProcessScheduler,8)):
+      flow.train(x)
+  note that the context manager takes care of initialize and shutting down the
+  scheduler. Proposed syntax:
+  extension(string, args=tuple, kwargs=dictionary)
+- bimdp: add deep belief network flow and nodes to the core bimdp
+- add cross-correlation tools, maybe support the use of a parallel scheduler
+- check problem with LLENode tutorial demo when using matplotlib 
+  0.99.1.2, see Olivier Grisel's email
+- LinearRegressionNode: add optional 2nd phase that computes residuals
+  and significance of the slope
+- provide a Node pickler, for arrays use the binary numpy format (npy,
+  numpy.save, numpy.load) and not pickle: pickling arrays is unsupported
+- add benchmarks for parallel module
+- provide different versions of the MDP logo which includes the
+  website address, possibly one higher quality print version,
+  available in "how to cite" section
+- Use the new property decorators when migrating to Python 2.6 (see
+  http://docs.python.org/library/functions.html#property).
+- kalman filters
+- memory profiler
+- GUI
