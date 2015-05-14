@@ -1,0 +1,7 @@
+To run our program, call "python parse.py", which will load the user and restaurant data and construct the growing neural gas network.  
+
+The system will then ask for a user ID to input, whereupon it will recommend users to follow (in the form of user ID's as provided by Yelp), and restaurants to try (in the form of restaurant ID's provided by Yelp).  
+
+A couple of user IDs you can enter to test are: x1qmBwKEOFCaGiYxs6ppRw and 8syjbjJRkzxK9RUaKewUr. 
+
+If you'd like to try others, it is probably easiest to copy and paste the user IDs of users the system recommends for the above user IDs.
